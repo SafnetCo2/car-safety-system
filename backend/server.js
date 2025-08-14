@@ -1,12 +1,6 @@
-const express = require("express");
 const dotenv = require("dotenv");
-const cors = require("cors");
-const connectDB = require("./src/config/db");
-const path = require("path"); // Add this line
+dotenv.config(); // must be first
 
-
-const dotenv = require("dotenv");
-dotenv.config(); // <-- must be first
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./src/config/db");
@@ -14,11 +8,7 @@ const path = require("path");
 
 connectDB();
 
-
-
-
-
-
+const app = express(); // <-- define app before using middleware
 
 // Configure CORS
 const corsOptions = {
@@ -26,7 +16,6 @@ const corsOptions = {
     credentials: true,
 };
 app.use(cors(corsOptions));
-
 app.use(express.json());
 
 // Routes
