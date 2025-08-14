@@ -1,24 +1,20 @@
-import axios from "axios";
-
-// Use environment variable or fallback to localhost
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api/drivers";
+// src/services/driverService.js
+const API_URL = process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_API_URL_PROD
+    : process.env.REACT_APP_API_URL;
 
 export const getDrivers = async () => {
-    const res = await axios.get(API_URL);
-    return res.data;
+    const res = await fetch(`${API_URL}/drivers`);
+    if (!res.ok) throw new Error("Failed to fetch drivers");
+    return res.json();
 };
 
 export const createDriver = async (driverData) => {
-    const res = await axios.post(API_URL, driverData);
-    return res.data;
-};
-
-export const updateDriver = async (id, driverData) => {
-    const res = await axios.put(`${API_URL}/${id}`, driverData);
-    return res.data;
-};
-
-export const deleteDriver = async (id) => {
-    const res = await axios.delete(`${API_URL}/${id}`);
-    return res.data;
+    const res = await fetch(`${API_URL}/drivers`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(driverData),
+    });
+    if (!res.ok) throw new Error("Failed to create driver");
+    return res.json();
 };

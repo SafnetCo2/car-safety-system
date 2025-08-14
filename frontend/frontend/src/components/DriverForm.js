@@ -14,8 +14,12 @@ export default function DriverForm() {
     }, []);
 
     const fetchDrivers = async () => {
-        const data = await getDrivers();
-        setDrivers(data);
+        try {
+            const data = await getDrivers();
+            setDrivers(data);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const handleChange = (e) => {
@@ -24,9 +28,13 @@ export default function DriverForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await createDriver(formData);
-        setFormData({ name: "", licenseNumber: "", vehicleType: "" });
-        fetchDrivers();
+        try {
+            await createDriver(formData);
+            setFormData({ name: "", licenseNumber: "", vehicleType: "" });
+            fetchDrivers();
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (

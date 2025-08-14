@@ -1,7 +1,14 @@
 // server.js
 const dotenv = require("dotenv");
-dotenv.config(); // Load .env variables first
-delete process.env.DEBUG_URL; // Remove DEBUG_URL to prevent Render crash
+
+// Load env variables first
+dotenv.config();
+
+// Remove DEBUG_URL if it exists (Render injects this automatically)
+if (process.env.DEBUG_URL) {
+    console.log("⚠️ Removing DEBUG_URL to prevent path-to-regexp crash");
+    delete process.env.DEBUG_URL;
+}
 
 const express = require("express");
 const cors = require("cors");
@@ -13,9 +20,6 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(express.json());
-
 // Configure CORS
 const corsOptions = {
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
@@ -23,23 +27,23 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// API Routes (relative paths only!)
+// Middleware
+app.use(express.json());
+
+// API Routes
 app.use("/api/drivers", require("./src/routes/driverRoutes"));
 app.use("/api/incidents", require("./src/routes/incidentRoutes"));
 app.use("/api/diagnostics", require("./src/routes/diagnosticRoutes"));
 
 // Serve React frontend in production
 if (process.env.NODE_ENV === "production") {
-    const frontendBuildPath = path.join(__dirname, "../frontend/build");
-    app.use(express.static(frontendBuildPath));
-
-    // All unmatched routes go to React frontend
+    app.use(express.static(path.join(__dirname, "../frontend/build")));
     app.get("*", (req, res) =>
-        res.sendFile(path.join(frontendBuildPath, "index.html"))
+        res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"))
     );
 }
 
-// Optional root endpoint for local development
+// Optional root endpoint
 app.get("/", (req, res) => {
     res.send("🚗 Smart Car Backend is running...");
 });
