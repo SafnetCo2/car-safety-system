@@ -1,6 +1,8 @@
 // server.js
-const express = require("express");
 const dotenv = require("dotenv");
+delete process.env.DEBUG_URL;
+
+const express = require("express");
 const cors = require("cors");
 const connectDB = require("./src/config/db");
 const path = require("path");
@@ -8,8 +10,7 @@ const path = require("path");
 // Load environment variables
 dotenv.config();
 
-// Remove Render's DEBUG_URL to avoid path-to-regexp crash
-delete process.env.DEBUG_URL;
+
 
 // Connect to MongoDB
 connectDB();
