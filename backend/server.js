@@ -1,14 +1,20 @@
-const dotenv = require("dotenv");
-dotenv.config(); // must be first
-
+// server.js
 const express = require("express");
+const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./src/config/db");
 const path = require("path");
 
+// Load environment variables
+dotenv.config();
+
+// Remove Render's DEBUG_URL to avoid path-to-regexp crash
+delete process.env.DEBUG_URL;
+
+// Connect to MongoDB
 connectDB();
 
-const app = express(); // <-- define app before using middleware
+const app = express();
 
 // Configure CORS
 const corsOptions = {
@@ -16,9 +22,11 @@ const corsOptions = {
     credentials: true,
 };
 app.use(cors(corsOptions));
+
+// Middleware
 app.use(express.json());
 
-// Routes
+// API Routes
 app.use("/api/drivers", require("./src/routes/driverRoutes"));
 app.use("/api/incidents", require("./src/routes/incidentRoutes"));
 app.use("/api/diagnostics", require("./src/routes/diagnosticRoutes"));
@@ -27,17 +35,20 @@ app.use("/api/diagnostics", require("./src/routes/diagnosticRoutes"));
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-    app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"));
-    });
+    app.get("*", (req, res) =>
+        res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"))
+    );
 }
 
-// Root endpoint (optional, mostly for local dev)
+// Optional root endpoint for local dev
 app.get("/", (req, res) => {
     res.send("🚗 Smart Car Backend is running...");
 });
 
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV || "development"} mode`);
+    console.log(
+        `🚀 Server running on port ${PORT} in ${process.env.NODE_ENV || "development"} mode`
+    );
 });
