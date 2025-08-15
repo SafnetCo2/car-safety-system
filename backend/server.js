@@ -1,8 +1,8 @@
 const express = require("express");
-const connectDB = require("./config/db");
-const driverRoutes = require("./routes/driverRoutes");
-const diagnosticRoutes = require("./routes/diagnosticRoutes");
-const incidentRoutes = require("./routes/incidentRoutes");
+const connectDB = require("./src/config/db");
+const driverRoutes = require("./src/routes/driverRoutes");
+const diagnosticRoutes = require("./src/routes/diagnosticRoutes");
+const incidentRoutes = require("./src/routes/incidentRoutes");
 
 const app = express();
 app.use(express.json());
