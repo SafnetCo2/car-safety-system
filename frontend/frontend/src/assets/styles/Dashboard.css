@@ -16,7 +16,10 @@
     padding: 20px;
     background: #f9f9f9;
     overflow-y: auto;
+    margin-left: 250px;
 }
+
+
 
 .dashboard-main h2 {
     margin-bottom: 20px;

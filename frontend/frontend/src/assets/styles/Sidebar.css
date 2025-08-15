@@ -1,11 +1,17 @@
 /* Sidebar Styles */
 .sidebar {
+        position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh; /* full height */
     background: #1e1e2f;
     color: #fff;
-    width: 240px;
-    min-height: 100vh;
     padding: 20px;
     transition: transform 0.3s ease-in-out;
+    z-index: 1000; 
+    min-height: 100vh;
+    
 }
 
 .sidebar h2 {
