@@ -1,57 +1,71 @@
-import React, { useState, useEffect } from "react";
-import { getDrivers, createDriver } from "../services/driverService";
+import React, { useState } from "react";
 
-export default function DriverForm() {
-    const [drivers, setDrivers] = useState([]);
-    const [formData, setFormData] = useState({
-        name: "",
-        licenseNumber: "",
-        vehicleType: ""
-    });
-
-    useEffect(() => {
-        fetchDrivers();
-    }, []);
-
-    const fetchDrivers = async () => {
-        try {
-            const data = await getDrivers();
-            setDrivers(data);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+function DriverForm({ onDriverAdded }) {
+    const [name, setName] = useState("");
+    const [licenseNumber, setLicenseNumber] = useState("");
+    const [vehicleType, setVehicleType] = useState("");
+    const [message, setMessage] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage("");
+
         try {
-            await createDriver(formData);
-            setFormData({ name: "", licenseNumber: "", vehicleType: "" });
-            fetchDrivers();
-        } catch (err) {
-            console.error(err);
+            const res = await fetch("https://car-safety-system.onrender.com/api/drivers", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, licenseNumber, vehicleType })
+            });
+
+            if (!res.ok) throw new Error(`Error ${res.status}`);
+
+            const data = await res.json();
+            setMessage("✅ Driver added successfully!");
+
+            // Clear form
+            setName("");
+            setLicenseNumber("");
+            setVehicleType("");
+
+            // Pass new driver back to parent (to update DriverCard list)
+            if (onDriverAdded) onDriverAdded(data);
+
+        } catch (error) {
+            console.error("Error adding driver:", error);
+            setMessage("❌ Failed to add driver");
         }
     };
 
     return (
         <div>
-            <h2>Drivers</h2>
-            <ul>
-                {drivers.map(driver => (
-                    <li key={driver._id}>{driver.name} - {driver.vehicleType}</li>
-                ))}
-            </ul>
-            <h3>Add Driver</h3>
+            <h2>Add Driver</h2>
             <form onSubmit={handleSubmit}>
-                <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
-                <input name="licenseNumber" placeholder="License Number" value={formData.licenseNumber} onChange={handleChange} required />
-                <input name="vehicleType" placeholder="Vehicle Type" value={formData.vehicleType} onChange={handleChange} required />
+                <input
+                    type="text"
+                    placeholder="Driver Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                /><br />
+                <input
+                    type="text"
+                    placeholder="License Number"
+                    value={licenseNumber}
+                    onChange={(e) => setLicenseNumber(e.target.value)}
+                    required
+                /><br />
+                <input
+                    type="text"
+                    placeholder="Vehicle Type"
+                    value={vehicleType}
+                    onChange={(e) => setVehicleType(e.target.value)}
+                    required
+                /><br />
                 <button type="submit">Add Driver</button>
             </form>
+            {message && <p>{message}</p>}
         </div>
     );
 }
+
+export default DriverForm;
