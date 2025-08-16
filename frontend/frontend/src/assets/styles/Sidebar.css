@@ -1,76 +1,83 @@
-/* Sidebar Styles */
+/* Sidebar */
 .sidebar {
-        position: fixed;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 100vh; /* full height */
-    background: #1e1e2f;
-    color: #fff;
-    padding: 20px;
-    transition: transform 0.3s ease-in-out;
-    z-index: 1000; 
-    min-height: 100vh;
-    
+  position: fixed;
+  top: 60px; /* below navbar */
+  left: 0;
+  width: 200px;
+  height: calc(100vh - 60px);
+  background: #1e1e2f;
+  color: #fff;
+  padding: 20px;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
 }
 
-.sidebar h2 {
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-    color: #f4f4f4;
-}
-
+/* Sidebar nav links */
 .sidebar nav {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar nav a {
-    padding: 12px 15px;
-    margin: 5px 0;
-    color: #ddd;
-    text-decoration: none;
-    border-radius: 6px;
-    transition: background 0.3s;
+  padding: 12px 15px;
+  margin: 5px 0;
+  color: #ddd;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.3s;
 }
 
 .sidebar nav a:hover {
-    background: #3e3e5e;
-    color: #fff;
+  background: #3e3e5e;
+  color: #fff;
 }
 
+/* Mobile Toggle Button */
 .sidebar-toggle {
-    display: none;
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-size: 1.8rem;
-    cursor: pointer;
-    margin-bottom: 15px;
+  display: none;
 }
 
-/* Mobile Sidebar */
 @media (max-width: 768px) {
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        transform: translateX(-100%);
-        z-index: 999;
-    }
+  .sidebar {
+    transform: translateX(-100%);
+    top: 0;
+    height: 100vh;
+  }
+  @media (max-width: 768px) {
+  .sidebar-toggle {
+    display: block;
+    position: fixed;
+    top: 70px; /* below navbar height (60px) + margin */
+    left: 10px;
+    background: #2563eb;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 1.5rem;
+    border-radius: 6px;
+    border: none;
+    z-index: 1200;
+    cursor: pointer;
+  }
+}
 
-    .sidebar.open {
-        transform: translateX(0);
-    }
 
-    .sidebar-toggle {
-        display: block;
-        position: absolute;
-        top: 15px;
-        right: -50px;
-        background: #1e1e2f;
-        padding: 8px;
-        border-radius: 4px;
-    }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-toggle {
+    display: block;
+    position: fixed; /* fixed so always visible */
+    top: 60px;
+    left: 10px; /* show on top-left */
+    background: #2563eb;
+    color: #fff;
+    padding: 10px 10px;
+    font-size: 1.5rem;
+    border-radius: 6px;
+    border: none;
+    z-index: 1200; /* above sidebar and navbar */
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
 }

@@ -5,10 +5,13 @@
     background: #1e1e2f;
     color: white;
     padding: 10px 20px;
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
-    
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 1100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .navbar-left h1 {
@@ -50,9 +53,14 @@
 
 .menu-toggle {
     display: none;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     cursor: pointer;
+    z-index: 1200; 
+    margin-right: 10px;
+    /* make sure it's above sidebar */
 }
+
+/* Search Bar */
 .navbar-search {
     padding: 6px 10px;
     border: none;
@@ -67,37 +75,43 @@
     background: #fff;
 }
 
-@media (max-width: 768px) {
-    .navbar-search {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-}
-
-/* ====== Responsive Styles ====== */
+/* ===== Responsive Navbar ===== */
 @media (max-width: 768px) {
     .menu-toggle {
         display: block;
+        color: #fff;
+        position: relative;
+        margin-right: 20px;
     }
 
     .navbar-right {
         position: absolute;
-        top: 60px;
+        top: 60px; /* below navbar */
         right: 0;
         background: #2c2c3a;
         flex-direction: column;
         align-items: flex-start;
         padding: 15px;
-        width: 200px;
+        width: 220px;
         display: none;
+        border-radius: 0 0 6px 6px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        z-index: 1050;
     }
 
     .navbar-right.active {
         display: flex;
     }
 
-    .btn-action {
+    .btn-action, .navbar-search, .user-info {
         width: 100%;
+        margin-bottom: 10px;
         text-align: left;
+    }
+
+    .user-info {
+        gap: 10px;
+        justify-content: flex-start;
     }
 }

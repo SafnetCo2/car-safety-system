@@ -1,4 +1,3 @@
-/* Dashboard Layout */
 .dashboard-layout {
     display: flex;
     flex-direction: column;
@@ -8,18 +7,18 @@
 .dashboard-content {
     display: flex;
     flex: 1;
+    margin-top: 60px; /* navbar height */
 }
 
-/* Dashboard Main Area */
+/* Main Content */
 .dashboard-main {
     flex: 1;
     padding: 20px;
     background: #f9f9f9;
     overflow-y: auto;
-    margin-left: 250px;
+    margin-left: 240px; /* sidebar width for large screens */
+    transition: margin 0.3s ease;
 }
-
-
 
 .dashboard-main h2 {
     margin-bottom: 20px;
@@ -35,11 +34,11 @@
 }
 
 .stat-card {
-    background: #ffffff;
+    background: #fff;
     border-radius: 10px;
     padding: 20px;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     transition: transform 0.2s ease;
 }
 
@@ -59,23 +58,24 @@
     color: #007bff;
 }
 
-/* Chart Container */
+/* Chart Wrapper */
 .chart-wrapper {
     margin-top: 30px;
     padding: 20px;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     overflow-x: auto;
 }
 
-/* Responsive Layout */
+/* ===== Responsive Layout ===== */
 @media (max-width: 992px) {
     .dashboard-content {
         flex-direction: column;
     }
 
     .dashboard-main {
+        margin-left: 0;
         padding: 15px;
     }
 }

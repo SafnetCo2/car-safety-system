@@ -16,3 +16,111 @@
 .stat-card h3 {
   margin-bottom: 10px;
 }
+/* ===== Driver Form Container ===== */
+.driver-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+/* ===== Driver Form Card ===== */
+.driver-form-card {
+    background-color: #fff;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.driver-form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+/* ===== Form Title ===== */
+.driver-form-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* ===== Form ===== */
+.driver-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ===== Input Fields ===== */
+.driver-input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.driver-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* ===== Button ===== */
+.driver-button {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.driver-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+.driver-success,
+.driver-error {
+  display: none; /* hidden by default */
+}
+
+.show-message {
+  display: block; /* add this class when you have a message */
+}
+
+
+
+
+
+/* ===== Success & Error Messages ===== */
+.driver-success {
+    color: green;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.driver-error {
+    color: red;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+    .driver-form-card {
+        padding: 25px 15px;
+    }
+
+    .driver-form-title {
+        font-size: 1.5rem;
+    }
+}
