@@ -1,31 +1,18 @@
 import React, { useEffect, useState } from "react";
 import DriverCard from "./DriverCard";
-
-// Use environment variable
-const API_URL = process.env.REACT_APP_API_URL + "/drivers";
+import API_URL from "../utils/api";
 
 function DriverList() {
     const [drivers, setDrivers] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
 
     const fetchDrivers = async () => {
-        setLoading(true);
-        setError("");
         try {
-            const res = await fetch(API_URL, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include" // optional if backend uses cookies/auth
-            });
-            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-            const data = await res.json();
+            const response = await fetch(`${API_URL}/drivers`);
+            if (!response.ok) throw new Error("Failed to fetch drivers");
+            const data = await response.json();
             setDrivers(data);
-        } catch (err) {
-            console.error("Failed to fetch drivers:", err);
-            setError("Failed to load drivers");
-        } finally {
-            setLoading(false);
+        } catch (error) {
+            console.error("Failed to fetch drivers:", error);
         }
     };
 
@@ -34,27 +21,19 @@ function DriverList() {
     }, []);
 
     return (
-        <div>
-            <h2>Driver List</h2>
-            {loading ? (
-                <p>Loading drivers...</p>
-            ) : error ? (
-                <p style={{ color: "red" }}>{error}</p>
-            ) : drivers.length > 0 ? (
-                drivers.map(driver => (
+        <div className="driver-list">
+            <h2>Registered Drivers</h2>
+            {drivers.length === 0 ? (
+                <p>No drivers found.</p>
+            ) : (
+                drivers.map((driver) => (
                     <DriverCard
                         key={driver._id}
                         name={driver.name}
                         licenseNumber={driver.licenseNumber}
                         vehicleType={driver.vehicleType}
-                        vin={driver.vin}
-                        model={driver.model}
-                        year={driver.year}
-                        fuelType={driver.fuelType}
                     />
                 ))
-            ) : (
-                <p>No drivers found.</p>
             )}
         </div>
     );

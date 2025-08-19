@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../assets/styles/styles.css";
 
-const API_URL = process.env.REACT_APP_API_URL || "https://car-safety-system.onrender.com/api";
-
+import API_BASE_URL from "../config"; // adjust path if needed
 
 function DriverForm({ onDriverAdded }) {
     const [drivers, setDrivers] = useState([]);
@@ -25,7 +24,7 @@ function DriverForm({ onDriverAdded }) {
     const fetchDrivers = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${API_URL}/drivers`);
+            const res = await fetch(`${API_BASE_URL}/drivers`);
             if (!res.ok) throw new Error(`Error ${res.status}`);
             const data = await res.json();
             setDrivers(data);
@@ -48,7 +47,7 @@ function DriverForm({ onDriverAdded }) {
         setMessage("");
 
         try {
-            const res = await fetch(`${API_URL}/drivers`, {
+            const res = await fetch(`${API_BASE_URL}/drivers`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
