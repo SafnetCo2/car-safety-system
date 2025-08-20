@@ -27,11 +27,11 @@ app.use("/api/diagnostics", diagnosticRoutes);
 app.use("/api/incidents", incidentRoutes);
 
 // ✅ Serve React build (correct path)
-app.use(express.static(path.join(__dirname, "frontend/frontend/build")));
+app.use(express.static(path.join(__dirname, "../frontend/frontend/build")));
 
 // ✅ Catch-all for React Router (Express 5 safe)
 app.get(/.*/, (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend/frontend/build", "index.html"));
+    res.sendFile(path.join(__dirname, "../frontend/frontend/build", "index.html"));
 });
 
 // ✅ Start server
