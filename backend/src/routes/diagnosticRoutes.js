@@ -2,63 +2,68 @@ const express = require("express");
 const router = express.Router();
 const Diagnostic = require("../models/Diagnostic");
 
-// Create new diagnostic record
-router.post("/", async (req, res) => {
-    try {
-        const newDiagnostic = await Diagnostic.create(req.body);
-        res.status(201).json(newDiagnostic);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});
-
-// Get all diagnostics
+// ✅ GET all diagnostics
 router.get("/", async (req, res) => {
     try {
-        const diagnostics = await Diagnostic.find();
+        const diagnostics = await Diagnostic.find().populate("driver");
         res.json(diagnostics);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 });
 
-// Get diagnostics for a specific driver
+
 router.get("/driver/:driverId", async (req, res) => {
     try {
-        const diagnostics = await Diagnostic.find({ driver: req.params.driverId });
+        const diagnostics = await Diagnostic.find({ driver: req.params.driverId }).populate("driver");
         res.json(diagnostics);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 });
 
-// Get diagnostics for a specific vehicle
-router.get("/vehicle/:vehicleId", async (req, res) => {
+
+// ✅ GET single diagnostic by ID
+router.get("/:id", async (req, res) => {
     try {
-        const diagnostics = await Diagnostic.find({ "vehicleData.vehicleId": req.params.vehicleId });
-        res.json(diagnostics);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+        const diagnostic = await Diagnostic.findById(req.params.id).populate("driver");
+        if (!diagnostic) return res.status(404).json({ message: "Diagnostic not found" });
+        res.json(diagnostic);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 });
 
-// Update diagnostic record
+// ✅ POST new diagnostic
+router.post("/", async (req, res) => {
+    try {
+        const diagnostic = new Diagnostic(req.body);
+        await diagnostic.save();
+        res.status(201).json(diagnostic);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// ✅ PUT update diagnostic
 router.put("/:id", async (req, res) => {
     try {
-        const updatedDiagnostic = await Diagnostic.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.json(updatedDiagnostic);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
+        const updated = await Diagnostic.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updated) return res.status(404).json({ message: "Diagnostic not found" });
+        res.json(updated);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 });
 
-// Delete diagnostic record
+// ✅ DELETE diagnostic
 router.delete("/:id", async (req, res) => {
     try {
-        await Diagnostic.findByIdAndDelete(req.params.id);
-        res.json({ message: "Diagnostic record deleted successfully" });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+        const deleted = await Diagnostic.findByIdAndDelete(req.params.id);
+        if (!deleted) return res.status(404).json({ message: "Diagnostic not found" });
+        res.json({ message: "Diagnostic deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 });
 
