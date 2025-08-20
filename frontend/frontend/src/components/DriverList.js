@@ -80,8 +80,32 @@ function DriverList({ refresh }) {
         }
     };
 
+    const handleReturn = () => {
+        navigate("/dashboard"); // navigate to dashboard
+    };
+
     return (
         <div className="driver-list-container table-responsive">
+            <div className="top-button-bar">
+                <button
+                    className="driver-button"
+                    onClick={() => navigate("/dashboard")} // Return button
+                >
+                    Return
+                </button>
+                <button
+                    className="driver-button"
+                    onClick={() => {
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        navigate("/login"); // Logout button
+                    }}
+                >
+                    Logout
+                </button>
+            </div>
+
+
             <h2 className="driver-list-title">Registered Drivers</h2>
             <table className="driver-table">
                 <thead>

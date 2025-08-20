@@ -314,3 +314,64 @@
     padding: 10px;
   }
 }
+.fixed-button-bar {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap; /* wrap buttons on small screens */
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.fixed-button-bar .driver-button {
+  padding: 10px 15px;
+  font-size: 0.95rem;
+  flex: 1 1 auto; /* allow buttons to grow and shrink */
+  min-width: 80px; /* prevent buttons from becoming too small */
+  max-width: 150px; /* optional: limit max width */
+}
+
+/* Responsive tweaks for very small screens */
+@media (max-width: 480px) {
+  .fixed-button-bar {
+    gap: 5px;
+    padding: 8px 10px;
+  }
+
+  .fixed-button-bar .driver-button {
+    font-size: 0.85rem;
+    padding: 8px 10px;
+  }
+}
+
+.top-button-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+
+.top-button-bar .driver-button {
+  padding: 10px 15px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* Small screens: stack buttons vertically */
+@media (max-width: 480px) {
+  .top-button-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .top-button-bar .driver-button {
+    width: 100%;
+  }
+}

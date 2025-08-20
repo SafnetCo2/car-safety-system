@@ -16,6 +16,7 @@ function DriverDiagnostics() {
     const [posting, setPosting] = useState(false);
     const [error, setError] = useState("");
 
+    // Fetch diagnostics
     const fetchDiagnostics = useCallback(async () => {
         if (!driverId) return;
         setLoading(true);
@@ -37,13 +38,12 @@ function DriverDiagnostics() {
         fetchDiagnostics();
     }, [fetchDiagnostics]);
 
+    // Handle form changes
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Handle form submit
     const handleSubmit = async (e) => {
         e.preventDefault();
         setPosting(true);
@@ -55,10 +55,7 @@ function DriverDiagnostics() {
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        driver: driverId,
-                        ...formData
-                    })
+                    body: JSON.stringify({ driver: driverId, ...formData })
                 }
             );
             if (!res.ok) throw new Error("Failed to add diagnostic");
@@ -73,54 +70,45 @@ function DriverDiagnostics() {
         }
     };
 
-    const handleReturn = () => {
-        navigate(-1); // go back
-    };
-
-    const handlePrint = () => {
-        window.print(); // print the page
-    };
-
-    const handleEnd = () => {
-        navigate("/dashboard"); // go to dashboard (change path as needed)
-    };
-
     if (loading) return <p>Loading diagnostics...</p>;
-    if (!diagnostics.length) return <p>No diagnostics found for this driver.</p>;
 
     return (
-        <div className="diagnostics-container">
+        <div className="diagnostics-container table-responsive">
             <h3>Diagnostics History</h3>
 
-            <table className="diagnostics-table table-responsive">
-                <thead>
-                    <tr>
-                        <th>Battery (%)</th>
-                        <th>Tire Pressure</th>
-                        <th>Engine Temp</th>
-                        <th>Notes</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {diagnostics.map((diag) => (
-                        <tr key={diag._id}>
-                            <td data-label="Battery">{diag.batteryLevel}</td>
-                            <td data-label="Tire Pressure">{diag.tirePressure}</td>
-                            <td data-label="Engine Temp">{diag.engineTemp}</td>
-                            <td data-label="Notes">{diag.notes}</td>
-                            <td data-label="Date">{new Date(diag.createdAt).toLocaleString()}</td>
+            {diagnostics.length > 0 ? (
+                <table className="diagnostics-table">
+                    <thead>
+                        <tr>
+                            <th>Battery (%)</th>
+                            <th>Tire Pressure</th>
+                            <th>Engine Temp</th>
+                            <th>Notes</th>
+                            <th>Date</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {diagnostics.map((diag) => (
+                            <tr key={diag._id}>
+                                <td data-label="Battery">{diag.batteryLevel}</td>
+                                <td data-label="Tire Pressure">{diag.tirePressure}</td>
+                                <td data-label="Engine Temp">{diag.engineTemp}</td>
+                                <td data-label="Notes">{diag.notes}</td>
+                                <td data-label="Date">{new Date(diag.createdAt).toLocaleString()}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>No diagnostics found for this driver.</p>
+            )}
 
-            <h4>Add New Diagnostic</h4>
-            <form onSubmit={handleSubmit} className="driver-form">
+            <h3>{diagnostics.length === 0 ? "Add First Diagnostic" : "Add Another Diagnostic"}</h3>
+            <form className="driver-form" onSubmit={handleSubmit}>
                 <input
                     type="number"
                     name="batteryLevel"
-                    placeholder="Battery Level (%)"
+                    placeholder="Battery (%)"
                     value={formData.batteryLevel}
                     onChange={handleChange}
                     className="driver-input"
@@ -159,11 +147,17 @@ function DriverDiagnostics() {
 
             {error && <p className="driver-error show-message">{error}</p>}
 
-            {/* Action Buttons */}
-            <div className="diagnostic-actions" style={{ marginTop: "20px", display: "flex", gap: "10px", justifyContent: "center" }}>
-                <button className="driver-button" onClick={handleReturn}>Return</button>
-                <button className="driver-button" onClick={handlePrint}>Print</button>
-                <button className="driver-button" onClick={handleEnd}>End</button>
+            {/* Fixed Button Bar */}
+            <div className="fixed-button-bar">
+                <button className="driver-button" onClick={() => window.print()}>
+                    Print
+                </button>
+                <button className="driver-button" onClick={() => navigate(-1)}>
+                    Return
+                </button>
+                <button className="driver-button" onClick={() => navigate("/dashboard")}>
+                    End
+                </button>
             </div>
         </div>
     );
