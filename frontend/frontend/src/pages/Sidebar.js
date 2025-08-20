@@ -20,7 +20,7 @@ function Sidebar() {
                     <a href="/dashboard">📊 Dashboard</a>
                     <a href="/drivers">👥 Drivers</a>
                     <a href="/vehicles">🚘 Vehicles</a>
-                    <a href="/diagnostics">🔧 Diagnostics</a>
+                    
                     <a href="/incidents">⚠️ Incidents</a>
                     <a href="/reports">📑 Reports</a>
                     <a href="/settings">⚙️ Settings</a>

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "../assets/styles/styles.css"
-function DriverList() {
+import { useNavigate } from "react-router-dom";
+import "../assets/styles/styles.css";
+
+function DriverList({ refresh }) {
     const [drivers, setDrivers] = useState([]);
     const [editingDriver, setEditingDriver] = useState(null);
     const [editForm, setEditForm] = useState({
@@ -13,14 +15,16 @@ function DriverList() {
         fuelType: "",
     });
 
+    const navigate = useNavigate();
+
     // Fetch drivers
     useEffect(() => {
         fetchDrivers();
-    }, []);
+    }, [refresh]);
 
     const fetchDrivers = async () => {
         try {
-            const res = await fetch("http://localhost:5000/api/drivers");
+            const res = await fetch("https://car-safety-system.onrender.com/api/drivers");
             const data = await res.json();
             setDrivers(data);
         } catch (error) {
@@ -28,11 +32,10 @@ function DriverList() {
         }
     };
 
-    // Delete driver
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this driver?")) return;
         try {
-            const res = await fetch(`http://localhost:5000/api/drivers/${id}`, {
+            const res = await fetch(`https://car-safety-system.onrender.com/api/drivers/${id}`, {
                 method: "DELETE",
             });
             if (res.ok) {
@@ -43,26 +46,26 @@ function DriverList() {
         }
     };
 
-    // Edit driver (open form)
     const handleEdit = (driver) => {
         setEditingDriver(driver._id);
         setEditForm(driver);
     };
 
-    // Handle edit form change
     const handleChange = (e) => {
         setEditForm({ ...editForm, [e.target.name]: e.target.value });
     };
 
-    // Update driver
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`http://localhost:5000/api/drivers/${editingDriver}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(editForm),
-            });
+            const res = await fetch(
+                `https://car-safety-system.onrender.com/api/drivers/${editingDriver}`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(editForm),
+                }
+            );
 
             if (res.ok) {
                 setDrivers(
@@ -78,9 +81,8 @@ function DriverList() {
     };
 
     return (
-        <div className="driver-list-container">
+        <div className="driver-list-container table-responsive">
             <h2 className="driver-list-title">Registered Drivers</h2>
-
             <table className="driver-table">
                 <thead>
                     <tr>
@@ -98,7 +100,7 @@ function DriverList() {
                     {drivers.map((driver) =>
                         editingDriver === driver._id ? (
                             <tr key={driver._id}>
-                                <td>
+                                <td data-label="Name">
                                     <input
                                         name="name"
                                         value={editForm.name}
@@ -106,7 +108,7 @@ function DriverList() {
                                         className="driver-input-small"
                                     />
                                 </td>
-                                <td>
+                                <td data-label="License">
                                     <input
                                         name="licenseNumber"
                                         value={editForm.licenseNumber}
@@ -114,7 +116,7 @@ function DriverList() {
                                         className="driver-input-small"
                                     />
                                 </td>
-                                <td>
+                                <td data-label="Vehicle Type">
                                     <input
                                         name="vehicleType"
                                         value={editForm.vehicleType}
@@ -122,7 +124,7 @@ function DriverList() {
                                         className="driver-input-small"
                                     />
                                 </td>
-                                <td>
+                                <td data-label="VIN">
                                     <input
                                         name="vin"
                                         value={editForm.vin}
@@ -130,7 +132,7 @@ function DriverList() {
                                         className="driver-input-small"
                                     />
                                 </td>
-                                <td>
+                                <td data-label="Model">
                                     <input
                                         name="model"
                                         value={editForm.model}
@@ -138,7 +140,7 @@ function DriverList() {
                                         className="driver-input-small"
                                     />
                                 </td>
-                                <td>
+                                <td data-label="Year">
                                     <input
                                         name="year"
                                         value={editForm.year}
@@ -146,7 +148,7 @@ function DriverList() {
                                         className="driver-input-small"
                                     />
                                 </td>
-                                <td>
+                                <td data-label="Fuel">
                                     <input
                                         name="fuelType"
                                         value={editForm.fuelType}
@@ -154,7 +156,7 @@ function DriverList() {
                                         className="driver-input-small"
                                     />
                                 </td>
-                                <td>
+                                <td data-label="Actions">
                                     <button onClick={handleUpdate} className="driver-button save">
                                         Save
                                     </button>
@@ -168,19 +170,28 @@ function DriverList() {
                             </tr>
                         ) : (
                             <tr key={driver._id}>
-                                <td>{driver.name}</td>
-                                <td>{driver.licenseNumber}</td>
-                                <td>{driver.vehicleType}</td>
-                                <td>{driver.vin}</td>
-                                <td>{driver.model}</td>
-                                <td>{driver.year}</td>
-                                <td>{driver.fuelType}</td>
-                                <td>
+                                <td data-label="Name">{driver.name}</td>
+                                <td data-label="License">{driver.licenseNumber}</td>
+                                <td data-label="Vehicle Type">{driver.vehicleType}</td>
+                                <td data-label="VIN">{driver.vin}</td>
+                                <td data-label="Model">{driver.model}</td>
+                                <td data-label="Year">{driver.year}</td>
+                                <td data-label="Fuel">{driver.fuelType}</td>
+                                <td data-label="Actions">
                                     <button onClick={() => handleEdit(driver)} className="driver-button edit">
                                         Edit
                                     </button>
-                                    <button onClick={() => handleDelete(driver._id)} className="driver-button delete">
+                                    <button
+                                        onClick={() => handleDelete(driver._id)}
+                                        className="driver-button delete"
+                                    >
                                         Delete
+                                    </button>
+                                    <button
+                                        onClick={() => navigate(`/diagnostics/${driver._id}`)}
+                                        className="driver-button view"
+                                    >
+                                        View Diagnostics
                                     </button>
                                 </td>
                             </tr>
