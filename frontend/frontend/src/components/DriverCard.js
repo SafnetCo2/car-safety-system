@@ -1,16 +1,15 @@
 import React from "react";
 
-
-function DriverCard({ name, licenseNumber, vehicleType, vin, model,year,fuelType }) {
+function DriverCard({ driver }) {
     return (
         <div className="driver-card">
-            <h3>{name}</h3>
-            <p><strong>License:</strong> {licenseNumber}</p>
-            <p><strong>Vehicle:</strong> {vehicleType}</p>
-            <p><strong>VIN:</strong>{vin}</p>
-            <p><strong>Model</strong>{model}</p>
-            <p><strong>Year</strong>{year}</p>
-            <p><strong>Fuel Type</strong>{fuelType}</p>
+            <p><strong>{driver.name}</strong> ({driver.licenseNumber})</p>
+            <p>Vehicle: {driver.vehicleType}</p>
+
+            {driver.vin && <p>VIN: {driver.vin}</p>}
+            {driver.model && <p>Model: {driver.model}</p>}
+            {driver.year && <p>Year: {driver.year}</p>}
+            {driver.fuelType && <p>Fuel Type: {driver.fuelType}</p>}
         </div>
     );
 }

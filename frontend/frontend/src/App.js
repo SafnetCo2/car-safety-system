@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -7,6 +7,8 @@ import DriverForm from "./components/DriverForm";
 import DriverList from "./components/DriverList";
 
 function App() {
+  const [refresh, setRefresh] = useState(0);
+
   return (
     <Router>
       <Routes>
@@ -17,8 +19,8 @@ function App() {
           path="/drivers"
           element={
             <>
-              <DriverForm />
-              <DriverList />
+              <DriverForm onDriverAdded={() => setRefresh((prev) => prev + 1)} />
+              <DriverList refresh={refresh} />
             </>
           }
         />
