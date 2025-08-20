@@ -47,10 +47,15 @@ function DriverForm({ onDriverAdded }) {
         setMessage("");
 
         try {
+            // ✅ Remove empty fields before sending
+            const cleanData = Object.fromEntries(
+                Object.entries(formData).filter(([_, v]) => v && v.trim() !== "")
+            );
+
             const res = await fetch(`${API_BASE_URL}/drivers`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(cleanData),
             });
 
             if (!res.ok) throw new Error(`Error ${res.status}`);
@@ -90,7 +95,7 @@ function DriverForm({ onDriverAdded }) {
                             placeholder={field.replace(/([A-Z])/g, " $1").replace(/^./, str => str.toUpperCase())}
                             value={formData[field]}
                             onChange={handleChange}
-                            required
+                            required={["name", "licenseNumber", "vehicleType"].includes(field)} // only require core fields
                             className="driver-input"
                         />
                     ))}
@@ -114,8 +119,8 @@ function DriverForm({ onDriverAdded }) {
                         {drivers.map((driver) => (
                             <div key={driver._id} className="driver-card">
                                 <p><strong>{driver.name}</strong> ({driver.licenseNumber})</p>
-                                <p>Vehicle: {driver.vehicleType} | VIN: {driver.vin}</p>
-                                <p>Model: {driver.model} | Year: {driver.year} | Fuel: {driver.fuelType}</p>
+                                <p>Vehicle: {driver.vehicleType} {driver.vin && `| VIN: ${driver.vin}`}</p>
+                                {driver.model && <p>Model: {driver.model} | Year: {driver.year} | Fuel: {driver.fuelType}</p>}
                             </div>
                         ))}
                     </div>
