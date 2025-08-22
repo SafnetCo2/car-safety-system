@@ -6,9 +6,12 @@ import Reports from "./pages/Reports";
 import DriverForm from "./components/DriverForm";
 import DriverList from "./components/DriverList";
 import DriverDiagnostics from "./components/DriverDiagnostics";
+import IncidentForm from "./components/IncidentForm";
+import IncidentList from "./components/IncidentList";
 
 function App() {
   const [refresh, setRefresh] = useState(0);
+  const [newIncident, setNewIncident] = useState(null); // Track newly added incident
 
   return (
     <Router>
@@ -28,10 +31,24 @@ function App() {
           }
         />
 
-        {/* Diagnostics page for a specific driver */}
+        {/* Diagnostics page */}
         <Route
           path="/diagnostics/:driverId"
           element={<DriverDiagnostics />}
+        />
+
+        {/* Incidents page */}
+        <Route
+          path="/incidents"
+          element={
+            <>
+              {/* Form to log new incidents */}
+              <IncidentForm onIncidentAdded={(incident) => setNewIncident(incident)} />
+
+              {/* List all incidents with live updates */}
+              <IncidentList newManualIncident={newIncident} />
+            </>
+          }
         />
       </Routes>
     </Router>

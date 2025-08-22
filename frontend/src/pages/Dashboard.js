@@ -1,5 +1,4 @@
-// src/pages/Dashboard.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../assets/styles/Dashboard.css";
 import Navbar from "../pages/Navbar";
 import Sidebar from "../pages/Sidebar";
@@ -10,22 +9,18 @@ import IncidentsTable from "../pages/Dashboard/IncidentsTable";
 import QuickAction from "../pages/Dashboard/QuickActions";
 
 export default function Dashboard() {
-    // Mock KPI data
+    const [incidents, setIncidents] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // KPIs
     const kpiData = [
-        { title: "Total Incidents", value: 120 },
-        { title: "Critical Alerts", value: 8 },
+        { title: "Total Incidents", value: incidents.length },
+        { title: "Critical Alerts", value: incidents.filter(i => i.type.includes("Collision")).length },
         { title: "Resolved Cases", value: 95 },
         { title: "Pending Actions", value: 17 },
     ];
 
-    // Mock incidents table data
-    const incidents = [
-        { id: 1, type: "Collision", status: "Critical", date: "2025-08-15" },
-        { id: 2, type: "Engine Fault", status: "Resolved", date: "2025-08-14" },
-        { id: 3, type: "Overheating", status: "Pending", date: "2025-08-13" },
-    ];
-
-    // Mock chart data
+    // Chart data
     const chartData = [
         { name: "Jan", incidents: 30, resolved: 20 },
         { name: "Feb", incidents: 45, resolved: 35 },
@@ -34,6 +29,23 @@ export default function Dashboard() {
         { name: "May", incidents: 70, resolved: 55 },
         { name: "Jun", incidents: 50, resolved: 48 },
     ];
+
+    // Fetch incidents
+    useEffect(() => {
+        const fetchIncidents = async () => {
+            try {
+                const res = await fetch("https://car-safety-system.onrender.com/api/incidents");
+                const data = await res.json();
+                setIncidents(data);
+            } catch (err) {
+                console.error("Error fetching incidents:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchIncidents();
+    }, []);
 
     const handleSearch = (query) => {
         console.log("Searching for:", query);
@@ -50,9 +62,14 @@ export default function Dashboard() {
                     <h2>Smart Car Safety Dashboard</h2>
                     <KPISection kpis={kpiData} />
                     <MonitoringPanel />
-                    {/* Pass chartData as prop */}
                     <ChartsSection data={chartData} />
-                    <IncidentsTable incidents={incidents} />
+
+                    {loading ? (
+                        <p>Loading incidents...</p>
+                    ) : (
+                        <IncidentsTable incidents={incidents} />
+                    )}
+
                     <QuickAction />
                 </main>
             </div>

@@ -270,9 +270,9 @@
   }
 
   .driver-button {
-    padding: 4px 8px;
+    
     font-size: 0.75rem;
-    margin: 1px;
+    
   }
 
   /* Diagnostics Table Responsive */
@@ -322,7 +322,7 @@
   display: flex;
   flex-wrap: wrap; /* wrap buttons on small screens */
   justify-content: center;
-  gap: 10px;
+  gap: 2px;
   background: rgba(255, 255, 255, 0.95);
   padding: 10px 15px;
   border-radius: 10px;
@@ -395,4 +395,699 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+/* ===== Mobile: Small Screens ===== */
+@media (max-width: 480px) {
+  /* Driver Form */
+  .driver-form-card {
+    padding: 25px 15px;
+  }
+
+  .driver-form-title {
+    font-size: 1.5rem;
+  }
+
+  /* Driver Table Container */
+  .driver-list-container {
+    padding: 15px;
+  }
+
+  /* Make driver table responsive on mobile */
+  .driver-table,
+  .driver-table thead,
+  .driver-table tbody,
+  .driver-table th,
+  .driver-table td,
+  .driver-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .driver-table thead {
+    display: none; /* hide headers */
+  }
+
+  .driver-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px;
+    background: #fff;
+  }
+
+  .driver-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px;
+    border: none;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+  }
+
+  .driver-table td:last-child {
+    border-bottom: none;
+  }
+
+  .driver-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+    flex: 1;
+    text-align: left;
+  }
+
+  /* Action buttons row */
+  .driver-table td[data-label="Actions"] {
+    justify-content: flex-end;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .driver-table td[data-label="Actions"] .driver-button {
+    flex: 1 1 auto;
+    min-width: 70px;
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+
+  /* Small Inputs */
+  .driver-input-small {
+    width: 70px;
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+
+  /* Diagnostics Table Responsive */
+  .diagnostics-table,
+  .diagnostics-table thead,
+  .diagnostics-table tbody,
+  .diagnostics-table th,
+  .diagnostics-table td,
+  .diagnostics-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .diagnostics-table thead {
+    display: none;
+  }
+
+  .diagnostics-table td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+    border: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .diagnostics-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    width: 45%;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .diagnostics-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+  }
+}
+/* === General Table Styling === */
+.table-container {
+  width: 100%;
+  overflow-x: auto;   /* ✅ horizontal scroll */
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 600px; /* ✅ ensures table doesn't shrink too much */
+}
+
+th, td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap; /* ✅ prevents text from breaking awkwardly */
+}
+
+th {
+  background: #f4f4f4;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* === Actions Column Styling === */
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.actions button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.actions button.edit {
+  background: #007bff;
+  color: white;
+}
+
+.actions button.edit:hover {
+  background: #0056b3;
+}
+
+.actions button.delete {
+  background: #dc3545;
+  color: white;
+}
+
+.actions button.delete:hover {
+  background: #a71d2a;
+}
+
+/* === Responsive Fix (Small Screens) === */
+@media (max-width: 480px) {
+  table {
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    padding: 8px 10px;
+  }
+
+  .actions button {
+    font-size: 0.75rem;
+    padding: 4px 6px;
+  }
+}
+/* === Fix Actions Buttons on Small Screens === */
+@media (max-width: 480px) {
+  .driver-table td[data-label="Actions"] {
+    display: flex;
+    flex-wrap: wrap;   /* ✅ allow buttons to wrap */
+    justify-content: center;
+    gap: 5px;          /* ✅ smaller spacing */
+  }
+
+  .driver-table td[data-label="Actions"] .driver-button {
+    flex: 1 1 30%;     /* ✅ fit 3 buttons per row */
+    min-width: 80px;   /* ✅ keep buttons readable */
+    font-size: 0.75rem;
+    padding: 6px 8px;
+  }
+}
+/* ===== Incident Form Container ===== */
+.incident-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+.incident-form-card {
+  background-color: #fff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.incident-form-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.incident-form-title {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.incident-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.incident-input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.incident-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.incident-button {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.incident-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.incident-success,
+.incident-error {
+  display: none;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.show-message {
+  display: block;
+}
+
+.incident-success {
+  color: green;
+}
+
+.incident-error {
+  color: red;
+}
+
+/* ===== Fade Animation ===== */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(-5px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-5px); }
+}
+
+/* ===== Incident Form Messages ===== */
+.incident-success,
+.incident-error {
+  font-weight: bold;
+  margin-top: 15px;
+  opacity: 0; /* hidden by default */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Show message with fadeIn */
+.show-message {
+  opacity: 1;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Optional: auto fade-out after a few seconds */
+.show-message.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+/* ===== Fully Responsive for All Screens ===== */
+@media (max-width: 768px) {
+  .incident-form-card {
+    padding: 25px 20px;
+    max-width: 350px;
+  }
+
+  .incident-form-title {
+    font-size: 1.6rem;
+  }
+
+  .incident-input {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .incident-button {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .incident-form-card {
+    padding: 20px 15px;
+    max-width: 100%;
+  }
+
+  .incident-form-title {
+    font-size: 1.4rem;
+  }
+
+  .incident-input {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .incident-button {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .incident-form-card {
+    padding: 15px 10px;
+  }
+
+  .incident-form-title {
+    font-size: 1.2rem;
+  }
+
+  .incident-input {
+    font-size: 0.85rem;
+    padding: 8px;
+  }
+
+  .incident-button {
+    font-size: 0.85rem;
+    padding: 8px;
+  }
+}
+/* ===== Incident Form Container ===== */
+.incident-form {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px 20px;
+  flex-wrap: wrap;
+  gap: 30px;
+  background-color: #f0f2f5;
+}
+
+.incident-form-card {
+  background-color: #fff;
+  padding: 25px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  max-width: 400px;
+  width: 100%;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.incident-form-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.incident-form-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.incident-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.incident-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.incident-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.incident-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.incident-success,
+.incident-error {
+  display: none;
+  font-weight: bold;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.show-message {
+  display: block;
+}
+
+.incident-success {
+  color: green;
+}
+
+.incident-error {
+  color: red;
+}
+
+/* ===== Incident List Table ===== */
+.incident-list-container {
+  flex: 1;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  min-width: 300px;
+}
+
+.incident-list-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.incident-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.incident-table th,
+.incident-table td {
+  padding: 12px 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.incident-table th {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+}
+
+.incident-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.incident-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* ===== Actions Column Styling ===== */
+.incident-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.incident-actions button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.incident-actions button.edit {
+  background-color: #28a745;
+  color: white;
+}
+
+.incident-actions button.edit:hover {
+  background-color: #1e7e34;
+}
+
+.incident-actions button.delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.incident-actions button.delete:hover {
+  background-color: #a71d2a;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .incident-form {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .incident-form-card, .incident-list-container {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .incident-form-card {
+    padding: 20px 15px;
+  }
+
+  .incident-form-title {
+    font-size: 1.5rem;
+  }
+
+  .incident-input {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .incident-button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .incident-table th,
+  .incident-table td {
+    padding: 8px 5px;
+    font-size: 0.8rem;
+  }
+
+  .incident-actions button {
+    padding: 5px 8px;
+    font-size: 0.8rem;
+  }
+}
+/* Main H1 title */
+.incident-form-main-title {
+  font-size: 2rem;
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+/* Logout button uses same style as incident button */
+.logout-button {
+  margin-top: 10px;
+  background-color: #dc3545;
+}
+
+.logout-button:hover {
+  background-color: #a71d2a;
+}
+
+/* Responsive tweaks for mobile */
+@media (max-width: 480px) {
+  .incident-form-main-title {
+    font-size: 1.5rem;
+  }
+  .incident-form-title {
+    font-size: 1.3rem;
+  }
+  .incident-input {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+  .incident-button {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}
+.incident-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center; /* center on large screens */
+  flex-wrap: wrap;         /* allow wrapping if needed */
+}
+
+.incident-actions button {
+  display: inline-block;
+  width: 100px;          /* same width as large screens */
+  padding: 8px 0;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.incident-actions button.edit {
+  background-color: #28a745;
+  color: white;
+}
+
+.incident-actions button.edit:hover {
+  background-color: #1e7e34;
+}
+
+.incident-actions button.delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.incident-actions button.delete:hover {
+  background-color: #a71d2a;
+}
+
+/* Small screens: stack vertically but keep same width */
+@media (max-width: 480px) {
+  .incident-actions {
+    flex-direction: column; /* stack buttons */
+    align-items: center;    /* center horizontally */
+    gap: 8px;
+  }
+
+  .incident-actions button {
+    width: 100px;           /* same width as large screen */
+    font-size: 0.85rem;
+    padding: 6px 0;
+  }
 }
