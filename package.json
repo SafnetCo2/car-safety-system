@@ -1,4 +1,11 @@
 {
+  "name": "car-safety-system",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install-all": "cd frontend && npm install && npm run build && cd ../backend && npm install",
+    "start": "node backend/server.js"
+  },
   "dependencies": {
     "cors": "^2.8.5"
   }
