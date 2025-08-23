@@ -26,11 +26,16 @@ app.use("/api/drivers", driverRoutes);
 app.use("/api/diagnostics", diagnosticRoutes);
 app.use("/api/incidents", incidentRoutes);
 
-// ✅ Serve React build (correct path)
+// ✅ Aliases for easier Postman testing
+app.get("/drivers", (req, res, next) => { req.url = "/api/drivers"; next(); });
+app.get("/incidents", (req, res, next) => { req.url = "/api/incidents"; next(); });
+app.get("/diagnostics", (req, res, next) => { req.url = "/api/diagnostics"; next(); });
+
+// ✅ Serve React build
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 // ✅ Catch-all for React Router (Express 5 safe)
-app.get(/.*/, (req, res) => {
+app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
 });
 
