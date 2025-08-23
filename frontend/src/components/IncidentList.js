@@ -1,44 +1,47 @@
 import React, { useState, useEffect } from "react";
 
-export default function IncidentList({ newManualIncident }) {
+export default function IncidentList({ onNewIncident }) {
     const [incidents, setIncidents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const [editData, setEditData] = useState({ driver: "", type: "", location: "" });
 
-    // Fetch incidents on mount
-    useEffect(() => {
-        fetchIncidents();
-    }, []);
-
-    // Add manual new incident to list
-    useEffect(() => {
-        if (newManualIncident) {
-            setIncidents((prev) => [newManualIncident, ...prev]);
-        }
-    }, [newManualIncident]);
-
+    // Fetch incidents
     const fetchIncidents = async () => {
         setLoading(true);
         try {
             const res = await fetch("https://car-safety-system.onrender.com/api/incidents");
+            if (!res.ok) throw new Error("Failed to fetch incidents");
             const data = await res.json();
             setIncidents(data);
         } catch (err) {
-            setError(err.message);
+            setError(err?.message || "Something went wrong");
         } finally {
             setLoading(false);
         }
     };
 
+    // Fetch incidents on mount
+    useEffect(() => {
+        fetchIncidents();
+    }, []);
+
+    // Auto-refresh when a new incident is added
+    useEffect(() => {
+        if (onNewIncident) {
+            fetchIncidents(); // Refresh list from backend
+        }
+    }, [onNewIncident]);
+
     // Delete incident
     const handleDelete = async (id) => {
         try {
-            await fetch(`https://car-safety-system.onrender.com/api/incidents/${id}`, { method: "DELETE" });
-            setIncidents((prev) => prev.filter((inc) => inc._id !== id));
+            const res = await fetch(`https://car-safety-system.onrender.com/api/incidents/${id}`, { method: "DELETE" });
+            if (!res.ok) throw new Error("Failed to delete incident");
+            fetchIncidents();
         } catch (err) {
-            setError(err.message);
+            setError(err?.message || "Something went wrong");
         }
     };
 
@@ -56,12 +59,20 @@ export default function IncidentList({ newManualIncident }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(editData),
             });
-            const updated = await res.json();
-            setIncidents((prev) => prev.map((inc) => (inc._id === id ? updated : inc)));
+            if (!res.ok) throw new Error("Failed to update incident");
+            await res.json();
             setEditingId(null);
+            setEditData({ driver: "", type: "", location: "" });
+            fetchIncidents(); // Refresh after save
         } catch (err) {
-            setError(err.message);
+            setError(err?.message || "Something went wrong");
         }
+    };
+
+    // Cancel editing
+    const handleCancel = () => {
+        setEditingId(null);
+        setEditData({ driver: "", type: "", location: "" });
     };
 
     return (
@@ -82,65 +93,71 @@ export default function IncidentList({ newManualIncident }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {incidents.map((inc) => (
-                            <tr key={inc._id}>
-                                <td>
-                                    {editingId === inc._id ? (
-                                        <input
-                                            value={editData.driver}
-                                            onChange={(e) => setEditData({ ...editData, driver: e.target.value })}
-                                            className="driver-input-small"
-                                        />
-                                    ) : (
-                                        inc.driver
-                                    )}
-                                </td>
-                                <td>
-                                    {editingId === inc._id ? (
-                                        <input
-                                            value={editData.type}
-                                            onChange={(e) => setEditData({ ...editData, type: e.target.value })}
-                                            className="driver-input-small"
-                                        />
-                                    ) : (
-                                        inc.type
-                                    )}
-                                </td>
-                                <td>
-                                    {editingId === inc._id ? (
-                                        <input
-                                            value={editData.location}
-                                            onChange={(e) => setEditData({ ...editData, location: e.target.value })}
-                                            className="driver-input-small"
-                                        />
-                                    ) : (
-                                        inc.location
-                                    )}
-                                </td>
-                                <td>{new Date(inc.createdAt).toLocaleString()}</td>
-                                <td className="actions" data-label="Actions">
-                                    {editingId === inc._id ? (
-                                        <>
-                                            <button className="driver-button save" onClick={() => handleSave(inc._id)}>
-                                                Save
-                                            </button>
-                                            <button className="driver-button cancel" onClick={() => setEditingId(null)}>
-                                                Cancel
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button className="driver-button edit" onClick={() => handleEdit(inc)}>
-                                                Edit
-                                            </button>
-                                            <button className="driver-button delete" onClick={() => handleDelete(inc._id)}>
-                                                Delete
-                                            </button>
-                                        </>
-                                    )}
-                                </td>
+                        {incidents.length > 0 ? (
+                            incidents.map((inc) => (
+                                <tr key={inc._id}>
+                                    <td>
+                                        {editingId === inc._id ? (
+                                            <input
+                                                value={editData.driver}
+                                                onChange={(e) => setEditData({ ...editData, driver: e.target.value })}
+                                                className="driver-input-small"
+                                            />
+                                        ) : (
+                                            inc.driver
+                                        )}
+                                    </td>
+                                    <td>
+                                        {editingId === inc._id ? (
+                                            <input
+                                                value={editData.type}
+                                                onChange={(e) => setEditData({ ...editData, type: e.target.value })}
+                                                className="driver-input-small"
+                                            />
+                                        ) : (
+                                            inc.type
+                                        )}
+                                    </td>
+                                    <td>
+                                        {editingId === inc._id ? (
+                                            <input
+                                                value={editData.location}
+                                                onChange={(e) => setEditData({ ...editData, location: e.target.value })}
+                                                className="driver-input-small"
+                                            />
+                                        ) : (
+                                            inc.location
+                                        )}
+                                    </td>
+                                    <td>{inc.createdAt ? new Date(inc.createdAt).toLocaleString() : "N/A"}</td>
+                                    <td className="actions">
+                                        {editingId === inc._id ? (
+                                            <>
+                                                <button className="driver-button save" onClick={() => handleSave(inc._id)}>
+                                                    Save
+                                                </button>
+                                                <button className="driver-button cancel" onClick={handleCancel}>
+                                                    Cancel
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button className="driver-button edit" onClick={() => handleEdit(inc)}>
+                                                    Edit
+                                                </button>
+                                                <button className="driver-button delete" onClick={() => handleDelete(inc._id)}>
+                                                    Delete
+                                                </button>
+                                            </>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="5">No incidents found</td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
