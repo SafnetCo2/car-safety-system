@@ -7,13 +7,14 @@ const connectDB = require("./src/config/db");
 const driverRoutes = require("./src/routes/driverRoutes");
 const diagnosticRoutes = require("./src/routes/diagnosticRoutes");
 const incidentRoutes = require("./src/routes/incidentRoutes");
+const authRoutes = require("./src/routes/authRoutes");
 
 const app = express();
 
-// ✅ Connect DB
+//  Connect DB
 connectDB();
 
-// ✅ Middleware
+//  Middleware
 app.use(express.json());
 app.use(cors({
     origin: '*',
@@ -21,19 +22,20 @@ app.use(cors({
     credentials: true
 }));
 
-// ✅ API routes
+//  API routes
 app.use("/api/drivers", driverRoutes);
 app.use("/api/diagnostics", diagnosticRoutes);
 app.use("/api/incidents", incidentRoutes);
+app.use("/api/auth", authRoutes);
 
-// ✅ Serve React build (correct path)
+//  Serve React build (correct path)
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-// ✅ Catch-all for React Router (Express 5 safe)
+//  Catch-all for React Router (Express 5 safe)
 app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
 });
 
-// ✅ Start server
+//  Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
