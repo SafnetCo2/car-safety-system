@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { googleLogout } from "@react-oauth/google";
 import "../assets/styles/Navbar.css";
@@ -6,44 +6,44 @@ import "../assets/styles/Navbar.css";
 function Navbar({ onSearch }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isGoogleUser, setIsGoogleUser] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token && token.startsWith("google_")) {
+            setIsGoogleUser(true);
+        }
+    }, []);
 
     const handleSearch = (e) => {
         e.preventDefault();
-        if (onSearch) {
-            onSearch(searchQuery.trim());
-        }
+        if (onSearch) onSearch(searchQuery.trim());
     };
 
     const handleLogout = () => {
-        // Clear local token
         localStorage.removeItem("token");
-
-        // Sign out Google session
-        googleLogout();
-
-        // Redirect to login page
+        if (isGoogleUser) {
+            try {
+                googleLogout();
+            } catch (err) {
+                console.warn("Google logout failed:", err);
+            }
+        }
         navigate("/login");
     };
 
     return (
         <header className="navbar">
-            {/* Left Branding */}
             <div className="navbar-left">
                 <h1>🚗 Car Safety System</h1>
             </div>
 
-            {/* Mobile Menu Toggle */}
-            <div
-                className="menu-toggle"
-                onClick={() => setMenuOpen(!menuOpen)}
-            >
+            <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
                 ☰
             </div>
 
-            {/* Right Actions */}
             <div className={`navbar-right ${menuOpen ? "active" : ""}`}>
-                {/* Search Bar */}
                 <form className="navbar-search" onSubmit={handleSearch}>
                     <input
                         type="text"
@@ -54,16 +54,12 @@ function Navbar({ onSearch }) {
                     <button type="submit">🔍</button>
                 </form>
 
-                {/* Action Buttons */}
                 <button className="btn-action">+ Add Driver</button>
                 <button className="btn-action">⚙ Settings</button>
-
-                {/* Logout Button */}
                 <button className="btn-action logout" onClick={handleLogout}>
                     🔓 Logout
                 </button>
 
-                {/* User Info */}
                 <div className="user-info">
                     <span>Welcome, Admin</span>
                     <img

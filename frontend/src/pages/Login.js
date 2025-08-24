@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
@@ -13,49 +12,40 @@ function Login() {
         e.preventDefault();
         setMessage("");
 
-        // Password validation
         const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}$/;
         if (!passwordRegex.test(password)) {
-            setMessage(
-                " Password must be at least 6 characters, include 1 uppercase and 1 special character"
-            );
+            setMessage("Password must be 6+ characters, include 1 uppercase & 1 special character.");
             return;
         }
 
         try {
-            const res = await fetch(
-                "https://car-safety-system.onrender.com/api/users/login",
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, password }),
-                }
-            );
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
             const data = await res.json();
-
             if (res.ok && data.token) {
                 localStorage.setItem("token", data.token);
-                setMessage(" Login successful!");
+                setMessage("Login successful!");
                 navigate("/dashboard");
             } else {
                 setMessage(data.message || "Invalid email or password");
             }
-        } catch (error) {
+        } catch {
             setMessage("Error logging in. Please try again.");
         }
     };
 
-    // Google login success
-    const handleGoogleSuccess = async (credentialResponse) => {
-        console.log("Google credential:", credentialResponse.credential);
-        // You can send credentialResponse.credential to backend to login/register user
+    const handleGoogleSuccess = (credentialResponse) => {
+        localStorage.setItem("token", credentialResponse.credential);
         setMessage("Logged in with Google!");
         navigate("/dashboard");
     };
 
     const handleGoogleError = () => {
-        setMessage(" Google login failed. Please try again.");
+        setMessage("Google login failed. Please try again.");
     };
 
     return (
@@ -79,27 +69,16 @@ function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    <button className="driver-button" type="submit">
-                        Login
-                    </button>
+                    <button className="driver-button" type="submit">Login</button>
                 </form>
 
                 <div style={{ margin: "20px 0", textAlign: "center" }}>
                     <p>Or login with Google:</p>
-                    <GoogleLogin
-                        onSuccess={handleGoogleSuccess}
-                        onError={handleGoogleError}
-                    />
+                    <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
                 </div>
 
                 {message && (
-                    <p
-                        className={
-                            message.includes("")
-                                ? "driver-success show-message"
-                                : "driver-error show-message"
-                        }
-                    >
+                    <p className={message.includes("successful") ? "driver-success" : "driver-error"}>
                         {message}
                     </p>
                 )}
