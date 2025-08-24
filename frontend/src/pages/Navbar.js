@@ -1,15 +1,29 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { googleLogout } from "@react-oauth/google";
 import "../assets/styles/Navbar.css";
 
 function Navbar({ onSearch }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const navigate = useNavigate();
 
     const handleSearch = (e) => {
         e.preventDefault();
         if (onSearch) {
-            onSearch(searchQuery.trim()); // Pass the search value to the parent
+            onSearch(searchQuery.trim());
         }
+    };
+
+    const handleLogout = () => {
+        // Clear local token
+        localStorage.removeItem("token");
+
+        // Sign out Google session
+        googleLogout();
+
+        // Redirect to login page
+        navigate("/login");
     };
 
     return (
@@ -43,6 +57,11 @@ function Navbar({ onSearch }) {
                 {/* Action Buttons */}
                 <button className="btn-action">+ Add Driver</button>
                 <button className="btn-action">⚙ Settings</button>
+
+                {/* Logout Button */}
+                <button className="btn-action logout" onClick={handleLogout}>
+                    🔓 Logout
+                </button>
 
                 {/* User Info */}
                 <div className="user-info">

@@ -53,6 +53,8 @@ export default function Dashboard() {
 
     return (
         <div className="dashboard-layout">
+            <h1>Welcome to your Dashboard</h1>
+            <p>You are logged in!</p>
             <Navbar onSearch={handleSearch} />
 
             <div className="dashboard-content">

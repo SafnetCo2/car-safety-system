@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Reports from "./pages/Reports";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
 import DriverForm from "./components/DriverForm";
 import DriverList from "./components/DriverList";
 import DriverDiagnostics from "./components/DriverDiagnostics";
@@ -16,38 +18,56 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/reports" element={<Reports />} />
+        {/* Public routes */}
+        <Route path="/" element={<Login />} /> {/* Redirect root to Login */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
 
-        {/* Drivers page */}
+        {/* Protected routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute>
+              <Reports />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/drivers"
           element={
-            <>
-              <DriverForm onDriverAdded={() => setRefresh((prev) => prev + 1)} />
-              <DriverList refresh={refresh} />
-            </>
+            <ProtectedRoute>
+              <>
+                <DriverForm onDriverAdded={() => setRefresh((prev) => prev + 1)} />
+                <DriverList refresh={refresh} />
+              </>
+            </ProtectedRoute>
           }
         />
-
-        {/* Diagnostics page */}
         <Route
           path="/diagnostics/:driverId"
-          element={<DriverDiagnostics />}
+          element={
+            <ProtectedRoute>
+              <DriverDiagnostics />
+            </ProtectedRoute>
+          }
         />
-
-        {/* Incidents page */}
         <Route
           path="/incidents"
           element={
-            <>
-              {/* Form to log new incidents */}
-              <IncidentForm onIncidentAdded={(incident) => setNewIncident(incident)} />
-
-              {/* List all incidents with live updates */}
-              <IncidentList newManualIncident={newIncident} />
-            </>
+            <ProtectedRoute>
+              <>
+                <IncidentForm onIncidentAdded={(incident) => setNewIncident(incident)} />
+                <IncidentList newManualIncident={newIncident} />
+              </>
+            </ProtectedRoute>
           }
         />
       </Routes>
