@@ -3,6 +3,7 @@ import "../assets/styles/Sidebar.css";
 
 function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [vehicleMenuOpen, setVehicleMenuOpen] = useState(false); // ✅ toggle submenu
 
     return (
         <>
@@ -19,8 +20,23 @@ function Sidebar() {
                 <nav>
                     <a href="/dashboard">📊 Dashboard</a>
                     <a href="/drivers">👥 Drivers</a>
-                    <a href="/vehicles">🚘 Vehicles</a>
-                    
+
+                    {/* Vehicles with Submenu */}
+                    <div className="sidebar-dropdown">
+                        <button
+                            className="dropdown-toggle"
+                            onClick={() => setVehicleMenuOpen(!vehicleMenuOpen)}
+                        >
+                            🚘 Vehicles {vehicleMenuOpen ? "▲" : "▼"}
+                        </button>
+                        {vehicleMenuOpen && (
+                            <div className="dropdown-menu">
+                                <a href="/vehicles/form">➕ Vehicle Form</a>
+                                <a href="/vehicles/list">📋 Vehicle List</a>
+                            </div>
+                        )}
+                    </div>
+
                     <a href="/incidents">⚠️ Incidents</a>
                     <a href="/reports">📑 Reports</a>
                     <a href="/settings">⚙️ Settings</a>

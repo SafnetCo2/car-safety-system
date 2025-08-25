@@ -7,6 +7,7 @@ import MonitoringPanel from "../pages/Dashboard/MonitoringPanel";
 import ChartsSection from "../pages/Dashboard/ChartsSection";
 import IncidentsTable from "../pages/Dashboard/IncidentsTable";
 import QuickAction from "../pages/Dashboard/QuickActions";
+import AlertStack from "../components/AlertStack"; // ✅ import AlertStack
 
 export default function Dashboard() {
     const [incidents, setIncidents] = useState([]);
@@ -51,16 +52,24 @@ export default function Dashboard() {
         console.log("Searching for:", query);
     };
 
+    const vehicleId = "64f2d1a9e3c8b123456789ab"; // Example: replace with real vehicle ID
+
     return (
         <div className="dashboard-layout">
             <h1>Welcome to your Dashboard</h1>
             <p>You are logged in!</p>
+
+            {/* Navbar */}
             <Navbar onSearch={handleSearch} />
 
             <div className="dashboard-content">
+                {/* Sidebar */}
                 <Sidebar />
 
                 <main className="dashboard-main">
+                    {/* Live Alerts */}
+                    <AlertStack vehicleId={vehicleId} />
+
                     <h2>Smart Car Safety Dashboard</h2>
                     <KPISection kpis={kpiData} />
                     <MonitoringPanel />

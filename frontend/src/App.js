@@ -7,13 +7,15 @@ import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DriverForm from "./components/DriverForm";
 import DriverList from "./components/DriverList";
+import VehicleForm from "./components/VehicleForm"; // ✅ new import
+import VehicleList from "./components/VehicleList"; // ✅ new import
 import DriverDiagnostics from "./components/DriverDiagnostics";
 import IncidentForm from "./components/IncidentForm";
 import IncidentList from "./components/IncidentList";
 import Signup from "./pages/Signup";
 
 function App() {
-  const [refresh, setRefresh] = useState(0);
+  const [refreshDrivers, setRefreshDrivers] = useState(0);
   const [newIncident, setNewIncident] = useState(null);
 
   return (
@@ -42,17 +44,39 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Drivers page */}
         <Route
           path="/drivers"
           element={
             <ProtectedRoute>
               <>
-                <DriverForm onDriverAdded={() => setRefresh((prev) => prev + 1)} />
-                <DriverList refresh={refresh} />
+                <DriverForm onDriverAdded={() => setRefreshDrivers(prev => prev + 1)} />
+                <DriverList refresh={refreshDrivers} />
               </>
             </ProtectedRoute>
           }
         />
+
+        {/* Vehicles pages separated */}
+        <Route
+          path="/vehicles/form"
+          element={
+            <ProtectedRoute>
+              <VehicleForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/vehicles/list"
+          element={
+            <ProtectedRoute>
+              <VehicleList />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Diagnostics */}
         <Route
           path="/diagnostics/:driverId"
           element={
@@ -61,6 +85,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Incidents page */}
         <Route
           path="/incidents"
           element={
