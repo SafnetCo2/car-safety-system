@@ -1,8 +1,8 @@
 // src/pages/Login.js
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // ✅ Added Link
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode"; // ✅ Correct import
+import { jwtDecode } from "jwt-decode";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -10,7 +10,6 @@ function Login() {
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
 
-    // ✅ Redirect if already logged in
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -100,10 +99,10 @@ function Login() {
                     <GoogleLogin
                         onSuccess={handleGoogleSuccess}
                         onError={handleGoogleError}
-                        useOneTap={false}      // Disable auto-login
-                        ux_mode="popup"       // Use popup for login
-                        auto_select={false}   //  Always ask which account
-                        prompt="select_account" // Force selection prompt
+                        useOneTap={false}
+                        ux_mode="popup"
+                        auto_select={false}
+                        prompt="select_account"
                     />
                 </div>
 
@@ -112,6 +111,16 @@ function Login() {
                         {message}
                     </p>
                 )}
+
+                {/* ✅ Signup link */}
+                <div style={{ marginTop: "15px", textAlign: "center" }}>
+                    <p>
+                        Don’t have an account?{" "}
+                        <Link to="/signup" style={{ color: "#007bff", textDecoration: "underline" }}>
+                            Create one
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );

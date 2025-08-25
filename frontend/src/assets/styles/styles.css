@@ -521,7 +521,7 @@
 /* === General Table Styling === */
 .table-container {
   width: 100%;
-  overflow-x: auto;   /* ✅ horizontal scroll */
+  overflow-x: auto;   /*  horizontal scroll */
   -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
 }
 
@@ -533,14 +533,14 @@ table {
   background: #fff;
   border-radius: 8px;
   overflow: hidden;
-  min-width: 600px; /* ✅ ensures table doesn't shrink too much */
+  min-width: 600px; /*  ensures table doesn't shrink too much */
 }
 
 th, td {
   padding: 12px 15px;
   border: 1px solid #ddd;
   text-align: left;
-  white-space: nowrap; /* ✅ prevents text from breaking awkwardly */
+  white-space: nowrap; /* prevents text from breaking awkwardly */
 }
 
 th {
