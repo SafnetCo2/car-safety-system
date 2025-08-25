@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+// src/pages/Login.js
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode"; // ✅ Correct import
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
+
+    // ✅ Redirect if already logged in
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/dashboard");
+        }
+    }, [navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -28,7 +38,6 @@ function Login() {
             const data = await res.json();
             if (res.ok && data.token) {
                 localStorage.setItem("token", data.token);
-                setMessage("Login successful!");
                 navigate("/dashboard");
             } else {
                 setMessage(data.message || "Invalid email or password");
@@ -39,9 +48,19 @@ function Login() {
     };
 
     const handleGoogleSuccess = (credentialResponse) => {
-        localStorage.setItem("token", credentialResponse.credential);
-        setMessage("Logged in with Google!");
-        navigate("/dashboard");
+        try {
+            const decoded = jwtDecode(credentialResponse.credential);
+            console.log("Google User:", decoded);
+
+            localStorage.setItem("token", credentialResponse.credential);
+            localStorage.setItem("googleUser", JSON.stringify(decoded));
+
+            setMessage("Logged in with Google!");
+            navigate("/dashboard");
+        } catch (error) {
+            console.error("Google token decode error:", error);
+            setMessage("Error logging in with Google.");
+        }
     };
 
     const handleGoogleError = () => {
@@ -52,21 +71,25 @@ function Login() {
         <div className="driver-form-container">
             <div className="driver-form-card">
                 <h2 className="driver-form-title">Login</h2>
-                <form className="driver-form" onSubmit={handleLogin}>
+                <form className="driver-form" onSubmit={handleLogin} autoComplete="on">
                     <input
                         className="driver-input"
                         type="email"
+                        name="email"
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="email"
                         required
                     />
                     <input
                         className="driver-input"
                         type="password"
+                        name="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        autoComplete="current-password"
                         required
                     />
                     <button className="driver-button" type="submit">Login</button>
@@ -74,11 +97,18 @@ function Login() {
 
                 <div style={{ margin: "20px 0", textAlign: "center" }}>
                     <p>Or login with Google:</p>
-                    <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
+                    <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={handleGoogleError}
+                        useOneTap={false}      // Disable auto-login
+                        ux_mode="popup"       // Use popup for login
+                        auto_select={false}   //  Always ask which account
+                        prompt="select_account" // Force selection prompt
+                    />
                 </div>
 
                 {message && (
-                    <p className={message.includes("successful") ? "driver-success" : "driver-error"}>
+                    <p className={message.includes("success") ? "driver-success" : "driver-error"}>
                         {message}
                     </p>
                 )}
